@@ -196,7 +196,7 @@ export const ShareFeedback: React.FC<ShareFeedbackProps> = (props) => {
         } else {
           cache.session.set("POST_CREATED_SUCCESS", "true")
         }
-        location.href = `/posts/${result.data.number}/${result.data.slug}`
+        location.href = `${fider.basePath}/posts/${result.data.number}/${result.data.slug}`
       } else if (result.error) {
         setError(result.error)
       }
@@ -213,7 +213,8 @@ export const ShareFeedback: React.FC<ShareFeedbackProps> = (props) => {
     // We don't need to do anything special here
   }
 
-  const showSubmitButton = title.replace(/\s+/g, " ").trim().length > 9
+  const minTitleLength = 6
+  const showSubmitButton = title.replace(/\s+/g, " ").trim().length > minTitleLength
 
   return (
     <Modal.Window className="c-share-feedback" isOpen={isOpen} onClose={handleClose} size="fullscreen" center={false}>
@@ -257,7 +258,13 @@ export const ShareFeedback: React.FC<ShareFeedbackProps> = (props) => {
                 onChange={handleTitleChange}
                 onKeyDown={handleKeyDown}
                 placeholder={i18n._({ id: "newpost.modal.title.placeholder", message: "Something short and snappy, sum it up in a few words" })}
-              />
+              >
+                {fider.session.isAuthenticated && !showSubmitButton && (
+                  <p className="text-muted mt-1">
+                    <Trans id="newpost.modal.titlehint">Please enter a title (at least {minTitleLength} characters) to submit your idea.</Trans>
+                  </p>
+                )}
+              </Input>
               {canEditTags && (
                 <div className="c-form-field">
                   <label>

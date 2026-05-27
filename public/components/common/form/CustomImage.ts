@@ -1,4 +1,5 @@
 import { ImageUpload } from "@fider/models"
+import { Fider } from "@fider/services"
 import Image from "@tiptap/extension-image"
 import * as MarkdownIt from "markdown-it"
 import { defaultMarkdownSerializer } from "prosemirror-markdown"
@@ -86,7 +87,7 @@ export const CustomImage = Image.extend<CustomImageOptions>({
 
                 let imageSrc = this.options.onGetImageSrc ? this.options.onGetImageSrc(imageId) : ""
                 if (imageSrc.length === 0) {
-                  imageSrc = `/static/images/${imageId}`
+                  imageSrc = `${Fider.settings.assetsURL}/static/images/${imageId}`
                 }
 
                 token.attrSet("src", imageSrc)

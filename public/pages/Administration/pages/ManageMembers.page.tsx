@@ -109,7 +109,7 @@ export default function ManageMembersPage(props: ManageMembersPageProps) {
       params.append("page", page.toString())
       params.append("limit", pageSize.toString())
 
-      const response = await fetch(`/api/v1/users?${params.toString()}`)
+      const response = await fetch(`${Fider.basePath}/api/v1/users?${params.toString()}`)
       if (response.ok) {
         const data = await response.json()
         setUsers(data.users)

@@ -377,7 +377,7 @@ func (c *Context) RemoveCookie(name string) {
 
 // BaseURL returns base URL
 func (c *Context) BaseURL() string {
-	return c.Request.BaseURL()
+	return BaseURL(c)
 }
 
 // QueryParam returns querystring parameter for given key

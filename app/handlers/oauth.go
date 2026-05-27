@@ -31,13 +31,13 @@ func OAuthEcho() web.HandlerFunc {
 
 		code := c.QueryParam("code")
 		if code == "" {
-			return c.Redirect("/")
+			return c.Redirect(c.BaseURL())
 		}
 
 		identifier := c.QueryParam("identifier")
 		if identifier == "" || identifier != c.SessionID() {
 			log.Warn(c, "OAuth identifier doesn't match with user session ID. Aborting sign in process.")
-			return c.Redirect("/")
+			return c.Redirect(c.BaseURL())
 		}
 
 		rawProfile := &query.GetOAuthRawProfile{Provider: provider, Code: code}
@@ -67,9 +67,9 @@ func OAuthEcho() web.HandlerFunc {
 			Page:  "OAuthEcho/OAuthEcho.page",
 			Title: "OAuth Test Page",
 			Data: web.Map{
-				"body":                 rawProfile.Result,
-				"profile":              parseRawProfile.Result,
-				"configuredRolesPath":  configuredRolesPath,
+				"body":                   rawProfile.Result,
+				"profile":                parseRawProfile.Result,
+				"configuredRolesPath":    configuredRolesPath,
 				"configuredAllowedRoles": configuredAllowedRoles,
 			},
 		})
@@ -142,13 +142,13 @@ func OAuthToken() web.HandlerFunc {
 					"UserRoles":    oauthUser.Result.Roles,
 					"AllowedRoles": providerAllowedRoles,
 				})
-			return c.Redirect("/access-denied")
+			return c.Redirect(c.BaseURL() + "/access-denied")
 		}
 		if err != nil {
 			if errors.Cause(err) == app.ErrNotFound {
 				isTrusted := customConfig != nil && customConfig.IsTrusted
 				if c.Tenant().IsPrivate && !isTrusted {
-					return c.Redirect("/not-invited")
+					return c.Redirect(c.BaseURL() + "/not-invited")
 				}
 
 				user = &entity.User{
@@ -276,7 +276,8 @@ func OAuthCallback() web.HandlerFunc {
 		query.Set("redirect", redirectURL.RequestURI())
 		query.Set("identifier", claims.Identifier)
 		redirectURL.RawQuery = query.Encode()
-		redirectURL.Path = fmt.Sprintf("/oauth/%s/token", provider)
+		base, _ := url.Parse(c.BaseURL())
+		redirectURL.Path = strings.TrimRight(base.Path, "/") + fmt.Sprintf("/oauth/%s/token", provider)
 		return c.Redirect(redirectURL.String())
 	}
 }
@@ -299,7 +300,9 @@ func SignInByOAuth() web.HandlerFunc {
 		redirectURL, _ := url.ParseRequestURI(redirect)
 		redirectURL.ResolveReference(c.Request.URL)
 
-		if c.IsAuthenticated() && redirectURL.Path != fmt.Sprintf("/oauth/%s/echo", provider) {
+		base, _ := url.Parse(c.BaseURL())
+		baseEchoPath := strings.TrimRight(base.Path, "/") + fmt.Sprintf("/oauth/%s/echo", provider)
+		if c.IsAuthenticated() && redirectURL.Path != baseEchoPath {
 			return c.Redirect(redirect)
 		}
 
@@ -358,4 +361,3 @@ func hasAllowedRole(userRoles []string, jsonUserRolesPath string, allowedRoles s
 	// User doesn't have any of the required roles
 	return false
 }
-

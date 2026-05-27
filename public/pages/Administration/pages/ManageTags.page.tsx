@@ -173,7 +173,7 @@ export default class ManageTagsPage extends AdminBasePage<ManageTagsPageProps, M
               skipped.
             </p>
             <div className="flex gap-2">
-              <Button variant="secondary" href="/admin/export/tags.json">
+              <Button variant="secondary" href={`${Fider.basePath}/admin/export/tags.json`}>
                 <Icon sprite={IconDownload} />
                 <span>Export tags.json</span>
               </Button>

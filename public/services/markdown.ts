@@ -1,6 +1,7 @@
 import { marked } from "marked"
 import DOMPurify from "dompurify"
 import { fiderAllowedSchemes } from "@fider/hooks"
+import { Fider } from "@fider/services"
 
 marked.setOptions({
   headerIds: false,
@@ -45,7 +46,7 @@ fullRenderer.image = (href, title, alt) => {
   // Check if this is our special fider-image syntax
   if (href && href.startsWith("fider-image:")) {
     const bkey = href.substring("fider-image:".length)
-    return `<img src="/static/images/${bkey}" alt="${alt || ""}" class="fider-inline-image" data-bkey="${bkey}" />`
+    return `<img src="${Fider.settings.assetsURL}/static/images/${bkey}" alt="${alt || ""}" class="fider-inline-image" data-bkey="${bkey}" />`
   }
   return originalImage(href, title, alt)
 }

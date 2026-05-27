@@ -72,9 +72,9 @@ func User() web.MiddlewareFunc {
 						redirectTarget != "/" &&
 						!strings.HasPrefix(redirectTarget, "/signin") &&
 						!strings.HasPrefix(redirectTarget, "/signout") {
-						return c.Redirect("/signin?redirect=" + url.QueryEscape(redirectTarget))
+						return c.Redirect(c.BaseURL() + "/signin?redirect=" + url.QueryEscape(redirectTarget))
 					}
-					return c.Redirect("/signin")
+					return c.Redirect(c.BaseURL() + "/signin")
 				}
 			} else if c.Request.IsAPI() {
 				authHeader := c.Request.GetHeader("Authorization")

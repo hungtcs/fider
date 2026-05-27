@@ -73,13 +73,13 @@ const HomePage = (props: HomePageProps) => {
     setSelectedPostId(postNumber)
     setLastOpenedPostId(postNumber) // Track which post was opened
     setIsPostDirty(false) // Reset dirty flag when opening overlay
-    window.history.pushState({ selectedPostId: postNumber }, "", `/posts/${postNumber}/${slug}`)
+    window.history.pushState({ selectedPostId: postNumber }, "", `${fider.basePath}/posts/${postNumber}/${slug}`)
   }
 
   // Handle closing the overlay
   const handleCloseOverlay = () => {
     setSelectedPostId(null)
-    window.history.pushState({}, "", `/${savedSearch}`)
+    window.history.pushState({}, "", `${fider.basePath}/${savedSearch}`)
   }
 
   // Track which post was opened so we can update just that one

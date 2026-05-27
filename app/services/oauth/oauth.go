@@ -407,7 +407,7 @@ func listAllOAuthProviders(ctx context.Context, q *query.ListAllOAuthProviders) 
 			Provider:         p.Provider,
 			DisplayName:      p.DisplayName,
 			ClientID:         p.ClientID,
-			URL:              fmt.Sprintf("/oauth/%s", p.Provider),
+			URL:              fmt.Sprintf("%s/oauth/%s", oauthBaseURL, p.Provider),
 			CallbackURL:      fmt.Sprintf("%s/oauth/%s/callback", oauthBaseURL, p.Provider),
 			IsCustomProvider: isCustomProvider,
 			LogoBlobKey:      p.LogoBlobKey,

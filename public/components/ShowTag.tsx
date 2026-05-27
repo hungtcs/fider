@@ -3,6 +3,7 @@ import "./ShowTag.scss"
 import React, { MouseEvent } from "react"
 import { Tag } from "@fider/models"
 import { classSet } from "@fider/services"
+import { useFider } from "@fider/hooks"
 import EyeSlash from "@fider/assets/images/heroicons-eyeslash.svg"
 import TagSolid from "@fider/assets/images/heroicons-tagsolid.svg"
 import { Icon } from "./common"
@@ -20,6 +21,7 @@ interface TagProps {
 // }
 
 export const ShowTag = (props: TagProps) => {
+  const fider = useFider()
   const className = classSet({
     "c-tag": true,
     "c-tag--circular": props.circular === true,
@@ -34,7 +36,7 @@ export const ShowTag = (props: TagProps) => {
   return (
     <a
       // always add an href, so the tag can be selected by keyboard in the TagsSelect
-      href={props.link && props.tag.slug ? `/?tags=${props.tag.slug}` : ""}
+      href={props.link && props.tag.slug ? `${fider.basePath}/?tags=${props.tag.slug}` : ""}
       title={`${props.tag.name}${props.tag.isPublic ? "" : " (Private)"}`}
       className={className}
       onClick={clickHandler}

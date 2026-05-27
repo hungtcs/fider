@@ -5,7 +5,7 @@ const navigator = {
     return window.location.href
   },
   goHome: () => {
-    window.location.href = "/"
+    window.location.href = Fider.basePath || "/"
   },
   goTo: (url: string) => {
     const isEqual = window.location.href === url || window.location.pathname === url

@@ -67,6 +67,13 @@ type Engine struct {
 	webServer     *http.Server
 	metricsServer *http.Server
 	cache         *cache.Cache
+	prefix        string
+}
+
+// SetPrefix sets a path prefix that will be stripped from all incoming requests.
+// This allows the entire application to be served under a sub-path (e.g., /feedback).
+func (e *Engine) SetPrefix(prefix string) {
+	e.prefix = prefix
 }
 
 // New creates a new Engine
@@ -114,12 +121,33 @@ func (e *Engine) Start(address string) {
 	}
 
 	stdLog.SetOutput(io.Discard)
+
+	var handler http.Handler = e.mux
+	if e.prefix != "" {
+		// 如果配置了路径前缀（例如 /feedback），必须带前缀才能访问：
+		// /feedback        → 301 重定向到 /feedback/
+		// /feedback/xxx    → 去掉前缀后交给路由
+		// /xxx（无前缀）     → 404
+		mux := e.mux
+		handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == e.prefix {
+				target := e.prefix + "/"
+				if r.URL.RawQuery != "" {
+					target += "?" + r.URL.RawQuery
+				}
+				http.Redirect(w, r, target, http.StatusMovedPermanently)
+				return
+			}
+			http.StripPrefix(e.prefix, mux).ServeHTTP(w, r)
+		})
+	}
+
 	e.webServer = &http.Server{
 		ReadTimeout:  env.Config.HTTP.ReadTimeout,
 		WriteTimeout: env.Config.HTTP.WriteTimeout,
 		IdleTimeout:  env.Config.HTTP.IdleTimeout,
 		Addr:         address,
-		Handler:      e.mux,
+		Handler:      handler,
 		TLSConfig:    getDefaultTLSConfig(env.Config.TLS.Automatic),
 	}
 

@@ -97,9 +97,9 @@ export const PostDetails: React.FC<PostDetailsProps> = (props) => {
       setLoading(true)
       try {
         const [postResponse, commentsResult, tagsResult] = await Promise.all([
-          fetch(`/api/v1/posts/${props.postNumber}`).then((r) => r.json()),
-          fetch(`/api/v1/posts/${props.postNumber}/comments`).then((r) => r.json()),
-          fetch(`/api/v1/tags`).then((r) => r.json()),
+          fetch(`${Fider.basePath}/api/v1/posts/${props.postNumber}`).then((r) => r.json()),
+          fetch(`${Fider.basePath}/api/v1/posts/${props.postNumber}/comments`).then((r) => r.json()),
+          fetch(`${Fider.basePath}/api/v1/tags`).then((r) => r.json()),
         ])
 
         if (postResponse) {
@@ -118,7 +118,7 @@ export const PostDetails: React.FC<PostDetailsProps> = (props) => {
         // Fetch subscription status if authenticated
         if (Fider.session.isAuthenticated) {
           try {
-            const subResponse = await fetch(`/api/v1/posts/${props.postNumber}/subscription`)
+            const subResponse = await fetch(`${Fider.basePath}/api/v1/posts/${props.postNumber}/subscription`)
             if (subResponse.ok) {
               const subData = await subResponse.json()
               setSubscribed(subData.subscribed || false)

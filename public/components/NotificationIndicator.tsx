@@ -14,7 +14,7 @@ import { Trans } from "@lingui/react/macro"
 
 export const NotificationItem = ({ notification }: { notification: Notification }) => {
   return (
-    <a href={`/notifications/${notification.id}`} className="px-3 pr-5 hover py-4 flex flex-x flex--spacing-4 flex-items-center">
+    <a href={`${Fider.basePath}/notifications/${notification.id}`} className="px-3 pr-5 hover py-4 flex flex-x flex--spacing-4 flex-items-center">
       <Avatar user={{ name: notification.authorName, avatarURL: notification.avatarURL }} />
       <div>
         <Markdown className="c-notification-indicator-text" text={notification.title} style="full" />

@@ -54,7 +54,7 @@ module.exports = {
   output: {
     path: __dirname + "/dist",
     filename: "js/[name].[contenthash].js",
-    publicPath: "/assets/",
+    publicPath: "/feedback/assets/",
     clean: true,
   },
   devtool: "source-map",

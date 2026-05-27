@@ -48,7 +48,7 @@ export const ResponseDetails = (props: PostResponseProps): JSX.Element | null =>
 
             {status === PostStatus.Duplicate && props.response.original && (
               <div className="c-response-details__content">
-                <a className="text-link" href={`/posts/${props.response.original.number}/${props.response.original.slug}`}>
+                <a className="text-link" href={`${fider.basePath}/posts/${props.response.original.number}/${props.response.original.slug}`}>
                   {props.response.original.title}
                 </a>
               </div>

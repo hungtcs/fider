@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"net/url"
 	"os"
 	"os/signal"
 	"path"
@@ -49,6 +50,13 @@ func RunServer() int {
 	startJobs(ctx)
 
 	e := routes(web.New())
+
+	// If BASE_URL contains a path prefix (e.g., http://localhost:3000/feedback),
+	// use it as the route prefix so the app is served under that path.
+	if baseURL, err := url.Parse(env.Config.BaseURL); err == nil && baseURL.Path != "" && baseURL.Path != "/" {
+		e.SetPrefix(baseURL.Path)
+	}
+
 	go e.Start(env.Config.Host + ":" + env.Config.Port)
 	return listenSignals(e)
 }

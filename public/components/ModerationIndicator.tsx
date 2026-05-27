@@ -13,7 +13,7 @@ export const ModerationIndicator = () => {
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const response = await fetch("/_api/admin/moderation/count")
+        const response = await fetch(`${fider.basePath}/_api/admin/moderation/count`)
         if (response.ok) {
           const data = await response.json()
           setCount(data.count || 0)
@@ -48,7 +48,7 @@ export const ModerationIndicator = () => {
 
   if (count > 0) {
     return (
-      <a href="/admin/moderation">
+      <a href={`${fider.basePath}/admin/moderation`}>
         <HStack className="bg-green-200 rounded-full px-4">
           <Icon width="18" height="18" sprite={ThumbsUp} />
           <Icon width="18" height="18" sprite={ThumbsDown} />

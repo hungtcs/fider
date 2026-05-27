@@ -83,6 +83,19 @@ export class FiderImpl {
     return this.pSettings
   }
 
+  /**
+   * Returns the path prefix from the base URL (e.g., "/feedback" from "http://localhost:3000/feedback").
+   * Returns empty string if base URL has no path.
+   */
+  public get basePath(): string {
+    try {
+      const url = new URL(this.pSettings.baseURL)
+      return url.pathname.replace(/\/$/, "")
+    } catch {
+      return ""
+    }
+  }
+
   public get isReadOnly(): boolean {
     return this.session.tenant && this.session.tenant.status === TenantStatus.Locked
   }

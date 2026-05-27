@@ -141,7 +141,7 @@ func SignUp() web.HandlerFunc {
 			}
 
 			if firstTenant.Result != nil {
-				return c.Redirect("/")
+				return c.Redirect(c.BaseURL())
 			}
 		} else {
 			baseURL := web.OAuthBaseURL(c)
@@ -220,7 +220,7 @@ func ResendSignUpEmail() web.HandlerFunc {
 		}
 
 		action := actions.NewResendSignUpEmail()
-		
+
 		if result := c.BindTo(action); !result.Ok {
 			return c.HandleValidation(result)
 		}
@@ -248,7 +248,7 @@ func ResendSignUpEmail() web.HandlerFunc {
 
 		// Send email
 		siteURL := web.TenantBaseURL(c, c.Tenant())
-		
+
 		// Create an adapter for the action to work with SendSignUpEmail
 		emailData := &resendEmailData{
 			verificationKey: action.VerificationKey,
